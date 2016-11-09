@@ -6,7 +6,6 @@ var bodyParser = require('body-parser');
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({extended: true}));
 
-
 router.get('/todos', function(req, res){
   Todo.find({}, function(err, foundTodos){
     if(err){
@@ -31,30 +30,17 @@ router.get('/todos/:id', function(req, res){
     });
   });
 });
-
-router.get('/todos/description/:desc', function(req, res){
-  Todo.find({ description: req.params.desc}, function(err, foundTodo){
-    if(err){
-      res.status(500).json({
-        err: err
-      });
-    }
-    res.status(200).json({
-      todo: foundTodo
-    });
-  });  
-});
-
 router.post('/todos', function(req, res){
   var todo = new Todo(req.body);
   todo.save(function(err){
     if(err){
+      // throw err; //don't do this! for now...
       res.status(500).json({
         err: err
       });
     }
     res.status(201).json({
-      msg: 'sucessfully created todo'
+      msg: 'successfully created todo'
     });
   });
 });
@@ -81,7 +67,17 @@ router.delete('/todos/:id', function(req, res){
       msg: deletedTodo
     });
   });
-
 });
-
+router.get('/todos/description/:desc', function(req, res){
+  Todo.find({description: req.params.desc }, function(err, todos){
+    if(err){
+      res.status(500).json({
+        err: err
+      });
+    }
+    res.status(200).json({
+      todos:todos
+    });
+  });
+});
 module.exports = router;
