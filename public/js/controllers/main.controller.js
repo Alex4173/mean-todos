@@ -1,4 +1,3 @@
-
 (function() {
   angular.module('mean-todos') //getter syntax
   .controller('MainController', MainController);
@@ -12,18 +11,23 @@
     $scope.editTodo = editTodo;
     $scope.saveTodo = saveTodo;
 
+    $scope.$watch(function(){
+      return TodoService.get();
+    }, function(){
+      $scope.todos = TodoService.get();
+    });
     function createTodo(newTodo){
       TodoService.create(newTodo);
       $scope.newTodo = '';
     }
-    function deleteTodo(index){
-      TodoService.delete(index);
+    function deleteTodo(index, todo){
+      TodoService.delete(index, todo);
     }
     function editTodo(todo){
       todo.isBeingEdited = true;
     }
     function saveTodo(index, todo){
-      TodoService.update(index, todo.desc);
+      TodoService.update(index, todo); //removed the .desc because data stuff is in the service
       todo.isBeingEdited = false;
     }
 
